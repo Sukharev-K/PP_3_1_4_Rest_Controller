@@ -5,7 +5,15 @@
 </head>
 <body>
 <h1>User, welcome spring boot security page!</h1>
+<table>
+    <tr>
+        <td th:text="${user.getId()}">VALUE</td>
+        <td th:text="${user.getFirstName()}">VALUE</td>
+        <td th:text="${user.getLastName()}">VALUE</td>
+        <td th:text="${user.getPassportNumberSeries()}">VALUE</td>
 
+    </tr>
+</table>
 
 </body>
 </html>
