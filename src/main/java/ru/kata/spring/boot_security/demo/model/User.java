@@ -5,13 +5,23 @@ import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
+
+import javax.persistence.Id;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.GeneratedValue;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.FetchType;
+import javax.persistence.GenerationType;
 
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 public class User implements UserDetails {
@@ -28,11 +38,8 @@ public class User implements UserDetails {
     @Column
     private String password;
 
-
     @Column
     private String login;
-
-
 
     @ManyToMany(fetch = FetchType.EAGER)
     @Fetch(FetchMode.JOIN)
@@ -89,12 +96,10 @@ public class User implements UserDetails {
         this.passportNumberSeries = passportNumberSeries;
     }
 
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoles();
     }
-
 
     @Override
     public String getUsername() {
@@ -140,6 +145,13 @@ public class User implements UserDetails {
 
     public Set<Role> getRoles() {
         return roles;
+    }
+
+    public String getRole() {
+        String rolesString = roles.stream()
+                .map(Role::getNameRole)
+                .collect(Collectors.joining(", "));
+        return rolesString;
     }
 
     public void setRoles(Set<Role> roles) {

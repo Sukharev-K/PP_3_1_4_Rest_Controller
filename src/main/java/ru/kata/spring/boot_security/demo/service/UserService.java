@@ -8,9 +8,7 @@ public interface UserService {
     List<User> printUsers();
     User showUserById(Integer id);
     void save(User user);
-
     void delete(Integer id);
-
     User findByLogin(String login);
 }
 

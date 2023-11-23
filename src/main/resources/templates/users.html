@@ -13,6 +13,7 @@
         </td>
         <td th:text="${user.getLastName()}">VALUE</td>
         <td th:text="${user.getPassportNumberSeries()}">VALUE</td>
+        <td th:text="${user.getRole()}">VALUE</td>
         <td> <a th:href="@{/admin/edit?id={id}(id=${user.getId()})}">Edit</a> </td>
 
         <td>
@@ -23,5 +24,10 @@
     </tr>
 </table>
 <a th:href="@{/admin/new}"><input type="submit" value="Create user."/></a>
+<div>
+    <form th:action="@{/logout}" method="post">
+        <input type="submit" value="Sign out" />
+    </form>
+</div>
 </body>
 </html>
