@@ -41,7 +41,7 @@ public class User implements UserDetails {
     @Column
     private String login;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @Fetch(FetchMode.JOIN)
     @JoinTable(
             name = "user_roles",
