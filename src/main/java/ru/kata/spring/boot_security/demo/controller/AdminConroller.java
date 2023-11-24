@@ -29,8 +29,7 @@ public class AdminConroller {
 
 
     @GetMapping()
-    public ModelAndView printUsers(
-            Model model, @RequestParam(name = "id",
+    public ModelAndView printUsers(@RequestParam(name = "id",
             required = false) Integer userId) {
         ModelAndView modelAndView = new ModelAndView("users");
         modelAndView.addObject("users", userService.printUsers());
@@ -53,7 +52,7 @@ public class AdminConroller {
 
 
     @GetMapping("/edit")
-    public ModelAndView edit(Model model, @RequestParam(name = "id") int id) {
+    public ModelAndView edit(@RequestParam(name = "id") int id) {
         ModelAndView modelAndView = new ModelAndView("edit");
         modelAndView.addObject("user", userService.showUserById(id));
         return modelAndView;
