@@ -22,6 +22,11 @@
     <label for="login">Enter login: </label>
     <input type="text" th:field="*{login}" id="login"/>
     <br/>
+    <label for="roles">Select roles</label>
+    <select th:field="*{roles}" id="roles" multiple>
+        <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.nameRole}"></option>
+    </select>
+    <br/>
     <input type="submit" value="Create user!"/>
 
 </form>

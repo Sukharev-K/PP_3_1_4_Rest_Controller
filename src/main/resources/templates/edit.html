@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<form th:method="POST" th:action="@{/admin}" th:object="${user}">
+<form th:method="PATCH" th:action="@{/admin}" th:object="${user}">
 
     <input type="hidden" th:field="*{id}" id="userId"/>
 
@@ -18,6 +18,14 @@
     <br/>
     <label for="passport">Enter passport: </label>
     <input type="text" th:field="*{passportNumberSeries}" id="passport"/>
+    <br/>
+    <label for="password">Enter password: </label>
+    <input type="text" th:field="*{password}" id="password"/>
+    <br/>
+    <label for="roles">Select roles</label>
+    <select th:field="*{roles}" id="roles" multiple>
+        <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.nameRole}"></option>
+    </select>
     <br/>
     <input type="submit" value="Update!"/>
 

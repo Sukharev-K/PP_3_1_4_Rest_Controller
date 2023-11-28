@@ -5,7 +5,6 @@ import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-
 import javax.persistence.Id;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,7 +14,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.FetchType;
 import javax.persistence.GenerationType;
-
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -27,7 +25,7 @@ import java.util.stream.Collectors;
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     @Column(name = "first_name")
     private String firstName;
     @Column(name = "last_name")
@@ -38,7 +36,7 @@ public class User implements UserDetails {
     @Column
     private String password;
 
-    @Column
+    @Column(unique = true)
     private String login;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -53,7 +51,7 @@ public class User implements UserDetails {
 
     }
 
-    public User(int id, String firstName, String lastName,
+    public User(Long id, String firstName, String lastName,
                 String passportNumberSeries, String password,
                 Set<Role> roles) {
         this.id = id;
@@ -64,11 +62,11 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -165,11 +163,12 @@ public class User implements UserDetails {
         return Objects.equals(id, user.id) &&
                 Objects.equals(firstName, user.firstName) &&
                 Objects.equals(lastName, user.lastName) &&
-                Objects.equals(passportNumberSeries, user.passportNumberSeries);
+                Objects.equals(passportNumberSeries, user.passportNumberSeries) &&
+                Objects.equals(roles, user.roles);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, passportNumberSeries);
+        return Objects.hash(id, firstName, lastName, passportNumberSeries, roles);
     }
 }

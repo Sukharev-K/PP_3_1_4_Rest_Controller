@@ -1,11 +1,11 @@
 package ru.kata.spring.boot_security.demo.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 import ru.kata.spring.boot_security.demo.model.Role;
 
-import java.util.Optional;
+import java.util.List;
 
-public interface RoleRepository extends CrudRepository<Role, Integer> {
+public interface RoleRepository extends CrudRepository<Role, Long> {
     Role findByNameRole(String name);
+    List<Role> findAll();
 }

@@ -17,12 +17,14 @@
         <td> <a th:href="@{/admin/edit?id={id}(id=${user.getId()})}">Edit</a> </td>
 
         <td>
-            <a th:href="@{/admin/delete(id=${user.getId()})}" onclick="return confirm('Are you sure you want to delete this user?');">
-                <button type="button">Delete</button>
-            </a>
+            <form th:method="DELETE" th:action="@{/admin/{id}(id=${user.getId()})}">
+                <input type="submit" value="Delete"/>
+            </form>
         </td>
+
     </tr>
 </table>
+
 <a th:href="@{/admin/new}"><input type="submit" value="Create user."/></a>
 <div>
     <form th:action="@{/logout}" method="post">

@@ -1,19 +1,12 @@
 package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import ru.kata.spring.boot_security.demo.model.Role;
+import ru.kata.spring.boot_security.demo.exception.DuplicateLoginException;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
-
 
 @Controller
 @RequestMapping("/admin")
@@ -21,16 +14,14 @@ public class AdminConroller {
     private final UserService userService;
     private final RoleService roleService;
 
-
     public AdminConroller(UserService userService, RoleService roleService) {
         this.userService = userService;
         this.roleService = roleService;
     }
 
-
     @GetMapping()
     public ModelAndView printUsers(@RequestParam(name = "id",
-            required = false) Integer userId) {
+            required = false) Long userId) {
         ModelAndView modelAndView = new ModelAndView("users");
         modelAndView.addObject("users", userService.printUsers());
         return modelAndView;
@@ -39,35 +30,38 @@ public class AdminConroller {
     @GetMapping("/new")
     public ModelAndView newUser(@ModelAttribute("user") User user) {
         ModelAndView modelAndView = new ModelAndView("new");
+        modelAndView.addObject("roles", roleService.findAll());
         return modelAndView;
     }
-
 
     @PostMapping("/new")
     public ModelAndView create(@ModelAttribute("user") User user) {
-        Role role = roleService.findByName("ROLE_USER");
-        userService.save(user, role);
-        return new ModelAndView("redirect:/admin");
+        try {
+            userService.save(user, user.getRoles());
+            return new ModelAndView("redirect:/admin");
+        } catch (DuplicateLoginException ex) {
+            ModelAndView modelAndView = new ModelAndView("errorPage");
+            modelAndView.addObject("errorMessage", ex.getMessage());
+            return modelAndView;
+        }
     }
 
-
     @GetMapping("/edit")
-    public ModelAndView edit(@RequestParam(name = "id") int id) {
+    public ModelAndView edit(@RequestParam(name = "id") Long id) {
         ModelAndView modelAndView = new ModelAndView("edit");
         modelAndView.addObject("user", userService.showUserById(id));
+        modelAndView.addObject("roles", roleService.findAll());
         return modelAndView;
     }
 
-
-    @PostMapping
-    public ModelAndView update(@ModelAttribute("user") User user, @RequestParam(name = "id") int id) {
-        userService.save(user);
+    @PatchMapping
+    public ModelAndView update(@ModelAttribute("user") User user, @RequestParam(name = "id") Long id) {
+        userService.update(user, user.getRoles());
         return new ModelAndView("redirect:/admin");
     }
 
-
-    @RequestMapping(value = "/delete", method = {RequestMethod.GET, RequestMethod.POST})
-    public ModelAndView delete(@RequestParam(name = "id") int id) {
+    @DeleteMapping("/{id}")
+    public ModelAndView delete(@PathVariable("id") Long id) {
         userService.delete(id);
         return new ModelAndView("redirect:/admin");
     }
