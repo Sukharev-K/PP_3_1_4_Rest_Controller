@@ -3,6 +3,7 @@ package ru.kata.spring.boot_security.demo.controller;
 import org.springframework.stereotype.Controller;
 
 
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +19,8 @@ import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
+import java.security.Principal;
+
 @Controller
 @RequestMapping("/admin")
 public class AdminConroller {
@@ -31,15 +34,17 @@ public class AdminConroller {
 
     @GetMapping()
     public ModelAndView printUsers(@RequestParam(name = "id",
-            required = false) Long userId) {
+            required = false) Long userId, Principal principal) {
         ModelAndView modelAndView = new ModelAndView("users");
-        modelAndView.addObject("users", userService.printUsers());
+        modelAndView.addObject("user", userService.findByLogin(principal.getName()));
+        modelAndView.addObject("roles", roleService.findAll());
+        modelAndView.addObject("use", userService.printUsers());
         return modelAndView;
     }
 
     @GetMapping("/new")
     public ModelAndView newUser(@ModelAttribute("user") User user) {
-        ModelAndView modelAndView = new ModelAndView("new");
+        ModelAndView modelAndView = new ModelAndView("redirect:/admin");
         modelAndView.addObject("roles", roleService.findAll());
         return modelAndView;
     }
@@ -58,14 +63,30 @@ public class AdminConroller {
 
     @GetMapping("/edit")
     public ModelAndView edit(@RequestParam(name = "id") Long id) {
-        ModelAndView modelAndView = new ModelAndView("edit");
+        ModelAndView modelAndView = new ModelAndView("redirect:/admin");
         modelAndView.addObject("user", userService.showUserById(id));
         modelAndView.addObject("roles", roleService.findAll());
         return modelAndView;
     }
 
-    @PatchMapping
-    public ModelAndView update(@ModelAttribute("user") User user, @RequestParam(name = "id") Long id) {
+//    @GetMapping("/edit/{id}")
+//    public ModelAndView edit(Model model, @PathVariable("id") Long id) {
+//        ModelAndView modelAndView = new ModelAndView("redirect:/admin");
+//        modelAndView.addObject("user", userService.showUserById(id));
+//        modelAndView.addObject("roles", roleService.findAll());
+//        return modelAndView;
+//    }
+
+//    @PatchMapping
+//    public ModelAndView update(@ModelAttribute("user") User user, @RequestParam(name = "id") Long id) {
+//        userService.update(user, user.getRoles());
+//        return new ModelAndView("redirect:/admin");
+//    }
+
+    @PatchMapping("/update/{id}")
+    public ModelAndView update(@ModelAttribute("user") User user,
+                               @PathVariable("id") Long id) {
+
         userService.update(user, user.getRoles());
         return new ModelAndView("redirect:/admin");
     }

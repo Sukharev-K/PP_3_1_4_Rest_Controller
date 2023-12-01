@@ -1,25 +1,107 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Spring Security Example</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Index</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+
 </head>
 <body>
-<h1>User, welcome spring boot security page!</h1>
-<table>
-    <tr>
-        <td th:text="${user.getId()}">VALUE</td>
-        <td th:text="${user.getFirstName()}">VALUE</td>
-        <td th:text="${user.getLastName()}">VALUE</td>
-        <td th:text="${user.getPassportNumberSeries()}">VALUE</td>
-        <td th:text="${user.getRole()}">VALUE</td>
 
-    </tr>
-</table>
-<div>
-    <form th:action="@{/logout}" method="post">
-        <input type="submit" value="Sign out" />
-    </form>
+
+<nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid" style="background-color: #282828">
+        <h4>
+            <form class="navbar-form navbar-left">
+                <strong><span style="color: white" th:text="${user.getLogin()}">VALUE</span></strong>
+                <span style="color: white" th:text="${' with roles: ' + user.roles}">VALUE</span>
+            </form>
+        </h4>
+        <ul class="nav navbar-nav navbar-right">
+            <form action="/logout">
+                <button style="color: gray" type="submit" class="btn btn-link">Logout</button>
+            </form>
+        </ul>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-md-2" style="padding-left: 0px; padding-right: 0px">
+            <div class="container-fluid" style="padding-left: 0px; padding-right: 0px">
+                <ul class="nav nav-pills nav-stacked" role="tablist">
+                    <li><a th:each="role: ${user.getRoles()}" th:if="${role.toString()}=='ADMIN'"
+                           th:href="@{/admin}">Admin</a></li>
+                    <li class="active"><a th:href="@{/user}">User</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-10">
+
+            <h1>
+                <strong>User information-page</strong>
+            </h1>
+
+            <div class="container-fluid">
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="usersTable">
+                        <div class="panel panel-default">
+
+                            <div class="panel-heading">
+                                <h4><strong>About user</strong></h4>
+                            </div>
+                            <div class="panel-body">
+
+                                <hr style="margin-top: 0; margin-bottom: 0"/>
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>PassportNumberSeries</th>
+                                        <th>login</th>
+                                        <th>Roles</th>
+                                    </tr>
+                                    </thead>
+                                    <tr th:each="users : ${user}">
+                                        <td th:text="${users.getId()}"></td>
+                                        <td th:text="${users.getFirstName}"></td>
+                                        <td th:text="${users.getLastName}"></td>
+                                        <td th:text="${users.getPassportNumberSeries()}"></td>
+                                        <td th:text="${users.getLogin()}"></td>
+                                        <td>
+                                            <th:block th:each="userRole : ${user.getRoles()}">
+                                                <span th:text="${userRole.toString()}"></span>
+                                            </th:block>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
 </div>
 
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
 </body>
 </html>
