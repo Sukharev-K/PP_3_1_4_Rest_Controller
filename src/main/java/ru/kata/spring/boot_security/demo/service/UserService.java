@@ -11,6 +11,7 @@ public interface UserService {
     User showUserById(Long id);
     void save(User user, Set<Role> role);
     void update(User user, Set<Role> roles);
+    void update(User user);
     void delete(Long id);
     User findByLogin(String login);
 }
