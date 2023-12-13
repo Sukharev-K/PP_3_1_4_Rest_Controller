@@ -1,5 +1,6 @@
 package ru.kata.spring.boot_security.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
@@ -39,6 +40,7 @@ public class User implements UserDetails {
     @Column(unique = true)
     private String login;
 
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY)
     @Fetch(FetchMode.JOIN)
     @JoinTable(
@@ -184,5 +186,4 @@ public class User implements UserDetails {
                 ", roles=" + roles +
                 '}';
     }
-
 }
